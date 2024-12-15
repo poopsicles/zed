@@ -14,6 +14,7 @@ pkgs.mkShell rec {
     pkgs.protobuf
     pkgs.rustPlatform.bindgenHook
     pkgs.rust-analyzer
+    pkgs.mold
   ];
 
   buildInputs =
@@ -27,10 +28,15 @@ pkgs.mkShell rec {
       pkgs.zlib
       pkgs.zstd
       pkgs.rustToolchain
+      pkgs.bzip2
+      pkgs.stdenv.cc.cc.lib
+      pkgs.vulkan-loader
     ]
     ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       pkgs.alsa-lib
       pkgs.libxkbcommon
+      pkgs.xorg.libxcb
+      pkgs.wayland
     ]
     ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin pkgs.apple-sdk_15;
 
@@ -54,4 +60,5 @@ pkgs.mkShell rec {
     ];
   };
   ZSTD_SYS_USE_PKG_CONFIG = true;
+  RUST_SRC_PATH = "${pkgs.rustToolchain}/lib/rustlib/src/rust/library";
 }
